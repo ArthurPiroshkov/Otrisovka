@@ -5,11 +5,14 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, FSInputFile
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 import asyncio
+import locale
 import random
 import re
 import os
 from io import BytesIO
 import sqlite3
+
+locale.setlocale(locale.LC_NUMERIC, "ru_RU.UTF-8")
 
 
 def init_db():
@@ -49,8 +52,8 @@ def is_allowed(tg_id: int) -> bool:
     return result is not None
 
 
-# ADMIN_ID = 8103911059
-ADMIN_ID = 1568156117
+ADMIN_ID = 8103911059
+# ADMIN_ID = 1568156117
 
 
 class TransferStates(StatesGroup):
@@ -61,6 +64,7 @@ class BankBot:
     def __init__(self):
         # self.bot = Bot("7740729484:AAFSmUf88ha7LC6Ex7sP8WArwf4twOgdAas")
         self.bot = Bot("8336684622:AAGbPuJcMp3fNkfZPWPlamWSfT0f4fG9isk")
+        # self.bot = Bot("7267437686:AAHF4t5U8NO218vUT75qI_AdABZKDbWcyGA")
         self.dp = Dispatcher()
 
         # === Ozon история переводов (порт из test.py) ===
@@ -296,6 +300,10 @@ class BankBot:
             digits = "7" + digits
         return f"+{digits[0]} {digits[1:4]} {digits[4:7]}-{digits[7:9]}-{digits[9:11]}"
 
+    def format_amount_tbank(self, amount: int) -> str:
+        formatted_number = locale.format_string("%d", int(amount), grouping=True)
+        return f"–{formatted_number} ₽"
+
     def validate_time(self, time_str: str) -> bool:
         return bool(re.match(r"^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", time_str))
 
@@ -488,10 +496,10 @@ class BankBot:
                 image_path = await self.create_tinkoff_image(
                     template=template,
                     time_text=time,
-                    datetime_text=f"{date} • {time}",
+                    datetime_text=f"{date} ∙ {time}",
                     name_text=name,
                     phone_text=formatted_phone,
-                    amount_text=f"–{amount} ₽",
+                    amount_text=self.format_amount_tbank(amount),
                 )
 
                 await message.answer_document(FSInputFile(image_path))
@@ -600,51 +608,6 @@ class BankBot:
         except Exception as e:
             print(f"Ошибка загрузки шрифта: {e}")
             time_font = name_font = amount_font = ImageFont.load_default()
-
-        # if transfer_type == "История переводов":
-        #     draw.text(
-        #         self.time_position,
-        #         time_text,
-        #         font=time_font,
-        #         fill=self.text_color
-        #     )
-
-        # for i, (name, amount) in enumerate(zip(names, amounts)):
-        #     offset_y = offsets[i]
-        #     if i == 2:
-        #         amount_bbox = draw.textbbox((0, 0), amount, font=ImageFont.truetype("assets/fonts/Onest-Regular.ttf", self.history_amount_font_size))
-        #     else:
-        #         amount_bbox = draw.textbbox((0, 0), amount, font=amount_font)
-        #     amount_width = amount_bbox[2] - amount_bbox[0]
-        #     amount_x = self.history_amount_base_x - amount_width
-        #     if i == 2:
-        #         draw.text(
-        #             (amount_x, offset_y),
-        #             amount,
-        #             font=ImageFont.truetype("assets/fonts/Onest-Regular.ttf", self.history_name_font_size),
-        #             fill=self.history_amount_color
-        #         )
-        #     else:
-        #         draw.text(
-        #             (amount_x, offset_y),
-        #             amount,
-        #             font=amount_font,
-        #             fill=self.history_amount_color
-        #         )
-        #     if i == 2:
-        #         draw.text(
-        #             (self.history_name_base_x, offset_y),
-        #             name,
-        #             font=ImageFont.truetype("assets/fonts/Onest-Regular.ttf", self.history_name_font_size),
-        #             fill=self.text_color
-        #         )
-        #     else:
-        #         draw.text(
-        #             (self.history_name_base_x, offset_y),
-        #             name,
-        #             font=name_font,
-        #             fill=self.text_color
-        #         )
 
         if transfer_type == "Ozon история переводов":
             # Шрифты из конфига
@@ -978,12 +941,12 @@ class BankBot:
 
         TEXT_COLOR = (40, 40, 40)
 
-        DATETIME_SIZE = 48
+        DATETIME_SIZE = 50
         NAME_SIZE = 48
         PHONE_SIZE = 50
         AMOUNT_SIZE = 90
 
-        DATETIME_Y = 240
+        DATETIME_Y = 247
         NAME_Y = 675
         AMOUNT_Y = 845
 
@@ -993,7 +956,7 @@ class BankBot:
             "assets/fonts/SFPRODISPLAYBOLD.OTF", self.time_font_size
         )
         datetime_font = ImageFont.truetype(
-            "assets/fonts/SFProText-Semibold.ttf", DATETIME_SIZE
+            "assets/fonts/SF Pro Text Semibold3.ttf", DATETIME_SIZE
         )
         name_font = ImageFont.truetype("assets/fonts/SFProText-Regular.ttf", NAME_SIZE)
         phone_font = ImageFont.truetype(
