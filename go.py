@@ -5,14 +5,11 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, FSInputFile
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 import asyncio
-import locale
 import random
 import re
 import os
 from io import BytesIO
 import sqlite3
-
-locale.setlocale(locale.LC_NUMERIC, "ru_RU.UTF-8")
 
 
 def init_db():
@@ -52,8 +49,7 @@ def is_allowed(tg_id: int) -> bool:
     return result is not None
 
 
-ADMIN_ID = 8103911059
-# ADMIN_ID = 1568156117
+ADMIN_IDS = [1568156117, 8103911059]
 
 
 class TransferStates(StatesGroup):
@@ -180,14 +176,14 @@ class BankBot:
         )
 
     async def cmd_start(self, message: types.Message, state: FSMContext):
-        if is_allowed(message.from_user.id) or message.from_user.id == ADMIN_ID:
+        if is_allowed(message.from_user.id) or message.from_user.id in ADMIN_IDS:
             await state.set_state(TransferStates.WAITING_FOR_INPUT)
             await message.answer(
                 "👋 Выберите тип операции:", reply_markup=self.get_main_keyboard()
             )
 
     async def cmd_true(self, message: types.Message):
-        if message.from_user.id != ADMIN_ID:
+        if message.from_user.id not in ADMIN_IDS:
             return await message.answer("⛔ Нет доступа.")
 
         args = message.text.split()
@@ -199,7 +195,7 @@ class BankBot:
         await message.answer(f"✅ Пользователю {tg_id} выдан доступ.")
 
     async def cmd_off(self, message: types.Message):
-        if message.from_user.id != ADMIN_ID:
+        if message.from_user.id not in ADMIN_IDS:
             return await message.answer("⛔ Нет доступа.")
 
         args = message.text.split()
@@ -211,7 +207,7 @@ class BankBot:
         await message.answer(f"🚫 Доступ пользователя {tg_id} удалён.")
 
     async def handle_transfer_type(self, message: types.Message, state: FSMContext):
-        if is_allowed(message.from_user.id) or message.from_user.id == ADMIN_ID:
+        if is_allowed(message.from_user.id) or message.from_user.id in ADMIN_IDS:
             await state.update_data(transfer_type=message.text)
 
             if message.text in ["Ozon история переводов"]:
@@ -301,7 +297,8 @@ class BankBot:
         return f"+{digits[0]} {digits[1:4]} {digits[4:7]}-{digits[7:9]}-{digits[9:11]}"
 
     def format_amount_tbank(self, amount: int) -> str:
-        formatted_number = locale.format_string("%d", int(amount), grouping=True)
+        formatted_temp = f"{int(amount):,}"
+        formatted_number = formatted_temp.replace(",", " ")
         return f"–{formatted_number} ₽"
 
     def validate_time(self, time_str: str) -> bool:
@@ -319,7 +316,7 @@ class BankBot:
             return False
 
     async def process_input(self, message: types.Message, state: FSMContext):
-        if is_allowed(message.from_user.id) or message.from_user.id == ADMIN_ID:
+        if is_allowed(message.from_user.id) or message.from_user.id in ADMIN_IDS:
             data = await state.get_data()
             transfer_type = data.get("transfer_type")
 
