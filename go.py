@@ -62,6 +62,7 @@ class BankBot:
     def __init__(self):
         # self.bot = Bot("7740729484:AAFSmUf88ha7LC6Ex7sP8WArwf4twOgdAas")
         # self.bot = Bot("8336684622:AAGbPuJcMp3fNkfZPWPlamWSfT0f4fG9isk")
+
         # session = AiohttpSession(
         #     proxy="socks5://91.195.86.147:1080",
         # )
