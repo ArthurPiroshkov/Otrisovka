@@ -65,7 +65,7 @@ class BankBot:
         session = AiohttpSession(
             proxy="socks5://91.195.86.147:1080",
         )
-        self.bot = Bot("8336684622:AAGbPuJcMp3fNkfZPWPlamWSfT0f4fG9isk")
+        self.bot = Bot("8336684622:AAGbPuJcMp3fNkfZPWPlamWSfT0f4fG9isk", session=session)
         self.dp = Dispatcher()
 
         # === Ozon история переводов (порт из test.py) ===
