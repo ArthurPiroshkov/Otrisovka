@@ -11,6 +11,8 @@ import os
 from io import BytesIO
 import sqlite3
 
+from aiogram.client.session.aiohttp import AiohttpSession
+
 
 def init_db():
     conn = sqlite3.connect("access.db")
@@ -60,7 +62,10 @@ class BankBot:
     def __init__(self):
         # self.bot = Bot("7740729484:AAFSmUf88ha7LC6Ex7sP8WArwf4twOgdAas")
         # self.bot = Bot("8336684622:AAGbPuJcMp3fNkfZPWPlamWSfT0f4fG9isk")
-        self.bot = Bot("7267437686:AAHF4t5U8NO218vUT75qI_AdABZKDbWcyGA")
+        session = AiohttpSession(
+            proxy="socks5://223.205.84.178:8081",
+        )
+        self.bot = Bot("8336684622:AAGbPuJcMp3fNkfZPWPlamWSfT0f4fG9isk")
         self.dp = Dispatcher()
 
         # === Ozon история переводов (порт из test.py) ===
