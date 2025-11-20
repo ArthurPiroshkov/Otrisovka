@@ -59,8 +59,8 @@ class TransferStates(StatesGroup):
 class BankBot:
     def __init__(self):
         # self.bot = Bot("7740729484:AAFSmUf88ha7LC6Ex7sP8WArwf4twOgdAas")
-        self.bot = Bot("8336684622:AAGbPuJcMp3fNkfZPWPlamWSfT0f4fG9isk")
-        # self.bot = Bot("7267437686:AAHF4t5U8NO218vUT75qI_AdABZKDbWcyGA")
+        # self.bot = Bot("8336684622:AAGbPuJcMp3fNkfZPWPlamWSfT0f4fG9isk")
+        self.bot = Bot("7267437686:AAHF4t5U8NO218vUT75qI_AdABZKDbWcyGA")
         self.dp = Dispatcher()
 
         # === Ozon история переводов (порт из test.py) ===
@@ -941,7 +941,7 @@ class BankBot:
         DATETIME_SIZE = 50
         NAME_SIZE = 48
         PHONE_SIZE = 50
-        AMOUNT_SIZE = 90
+        AMOUNT_SIZE = 88
 
         DATETIME_Y = 247
         NAME_Y = 675
@@ -953,14 +953,14 @@ class BankBot:
             "assets/fonts/SFPRODISPLAYBOLD.OTF", self.time_font_size
         )
         datetime_font = ImageFont.truetype(
-            "assets/fonts/SF Pro Text Semibold3.ttf", DATETIME_SIZE
+            "assets/fonts/SF Pro Text Medium2.ttf", DATETIME_SIZE
         )
         name_font = ImageFont.truetype("assets/fonts/SFProText-Regular.ttf", NAME_SIZE)
         phone_font = ImageFont.truetype(
             "assets/fonts/SFProText-Regular.ttf", PHONE_SIZE
         )
         amount_font = ImageFont.truetype(
-            "assets/fonts/SFProText Bold-2 Mac.ttf", AMOUNT_SIZE
+            "assets/fonts/SFProText Bold-2.ttf", AMOUNT_SIZE
         )
 
         draw.text(self.time_position, time_text, font=time_font, fill=self.text_color)
