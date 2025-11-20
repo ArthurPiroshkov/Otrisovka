@@ -63,7 +63,7 @@ class BankBot:
         # self.bot = Bot("7740729484:AAFSmUf88ha7LC6Ex7sP8WArwf4twOgdAas")
         # self.bot = Bot("8336684622:AAGbPuJcMp3fNkfZPWPlamWSfT0f4fG9isk")
         session = AiohttpSession(
-            proxy="socks5://91.195.86.147:1080",
+            proxy="socks5://89.58.45.94:12083",
         )
         self.bot = Bot("8336684622:AAGbPuJcMp3fNkfZPWPlamWSfT0f4fG9isk", session=session)
         self.dp = Dispatcher()
